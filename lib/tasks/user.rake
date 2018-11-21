@@ -4,7 +4,7 @@ namespace :user do
     users = User.all
     puts "Enqueuing update of #{users.size} users..."
     users.each do |user|
-      UpdateUserJob.perform_later(user.id) # /!\ BE CAREFUL WITH YOUR API REQUEST LIMIT
+      UserUpdateJob.perform_later(user.id) # /!\ BE CAREFUL WITH YOUR API REQUEST LIMIT
     end
     # rake task will return when all jobs are _enqueued_ (not done).
   end
@@ -13,7 +13,7 @@ namespace :user do
   task :update, [:user_id] => :environment do |t, args|
     user = User.find(args[:user_id])
     puts "Enriching #{user.email}..."
-    UpdateUserJob.perform_now(user.id)
+    UserUpdateJob.perform_now(user.id)
     # rake task will return when job is _done_
   end
 end
